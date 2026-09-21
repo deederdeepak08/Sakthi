@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>TCE Student Portal</title>
+    <style>
+        :root {
+            --tce-maroon: #800000;
+            --tce-gold: #ffcc00;
+            --bg-color: #f4f5f8;
+            --card-bg: #ffffff;
+            --text-primary: #1c1c1e;
+            --text-secondary: #6e6e73;
+            --border-color: #e5e5ea;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 70px; /* Space for mobile nav bar */
+            overflow-x: hidden;
+        }
+
+        /* Mobile Screen Shake */
+        .shake {
+            animation: mobileShake 0.04s infinite alternate;
+        }
+
+        @keyframes mobileShake {
+            0% { transform: translate(6px, -6px) rotate(1deg); filter: invert(1); }
+            50% { transform: translate(-8px, 8px) rotate(-1.5deg); }
+            100% { transform: translate(10px, 3px) rotate(0.8deg); filter: invert(0); }
+        }
+
+        /* Mobile Header Bar */
+        .mobile-header {
+            background-color: var(--tce-maroon);
+            color: #ffffff;
+            padding: 16px 20px 14px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            border-bottom: 3px solid var(--tce-gold);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .college-info h1 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .college-info p {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.85);
+            margin-top: 2px;
+        }
+
+        .portal-badge {
+            background: var(--tce-gold);
+            color: var(--tce-maroon);
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Mobile Container */
+        .app-container {
+            padding: 16px;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Profile Card */
+        .student-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 20px;
+        }
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+            background-color: var(--tce-maroon);
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .student-details h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--tce-maroon);
+            margin-bottom: 2px;
+        }
+
+        .student-details p {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        /* Section Header */
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding-left: 4px;
+        }
+
+        /* Action Cards */
+        .portal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .action-card:active {
+            background-color: #eef0f4;
+            transform: scale(0.98);
+        }
+
+        .action-text h3 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .action-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .arrow-icon {
+            font-size: 1.1rem;
+            color: var(--tce-maroon);
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        /* Mobile Bottom Navigation Bar */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #ffffff;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 80;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            color: var(--text-secondary);
+            font-size: 0.65rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: var(--tce-maroon);
+            font-weight: 700;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Mobile Prank & Blackout Overlay */
+        #prankOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #000000;
+            z-index: 99999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            text-align: center;
+            padding: 24px;
+        }
+
+        .glitch-flash {
+            animation: violentFlash 0.03s infinite;
+        }
+
+        @keyframes violentFlash {
+            0% { background-color: #ff0000; }
+            33% { background-color: #00ffff; }
+            66% { background-color: #ffffff; }
+            100% { background-color: #000000; }
+        }
+
+        .glitch-text {
+            font-size: 1.3rem;
+            font-family: 'Courier New', Courier, monospace;
+            color: #ff0055;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px #00ffff;
+            margin-bottom: 12px;
+        }
+
+        .sub-text {
+            font-size: 0.75rem;
+            color: #ffffff;
+            background: #000000;
+            padding: 6px 12px;
+            font-family: monospace;
+            border: 1px solid #ff0055;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Header Bar -->
+    <div class="mobile-header">
+        <div class="college-info">
+            <h1>TCE MADURAI</h1>
+            <p>Student Academic Portal</p>
+        </div>
+        <div class="portal-badge">AUTONOMOUS</div>
+    </div>
+
+    <!-- Main Mobile Content -->
+    <div class="app-container">
+        
+        <!-- Student Info Card -->
+        <div class="student-card">
+            <div class="avatar">SP</div>
+            <div class="student-details">
+                <h2>SAKTHI PRASATH</h2>
+                <p><strong>Roll No:</strong> 24TCE999</p>
+                <p>B.Tech — Academic Dashboard</p>
+            </div>
+        </div>
+
+        <!-- Academic Actions List -->
+        <div class="section-label">Academic Services</div>
+        
+        <div class="portal-actions">
+            
+            <div class="action-card" onclick="startPrank20Sec()">
+                <div class="action-text">
+                    <h3>CAT Exam Marks</h3>
+                    <p>View Continuous Assessment Test 1 & 2 Results</p>
+                </div>
+                <div class="arrow-icon">➔</div>
+            </div>
+
+            <div class="action-card" onclick="startPrank20Sec()">
+                <div class="action-text">
+                    <h3>Semester Attendance</h3>
+                    <p>Check overall course-wise attendance status</p>
+                </div>
+                <div class="arrow-icon">➔</div>
+            </div>
+
+            <div class="action-card" onclick="startPrank20Sec()">
+                <div class="action-text">
+                    <h3>Download Grade Sheet</h3>
+                    <p>Get official PDF copy of assessment marks</p>
+                </div>
+                <div class="arrow-icon">➔</div>
+            </div>
+
+            <div class="action-card" onclick="startPrank20Sec()">
+                <div class="action-text">
+                    <h3>Time Table & Exams</h3>
+                    <p>View upcoming assessment schedule</p>
+                </div>
+                <div class="arrow-icon">➔</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="startPrank20Sec()">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="startPrank20Sec()">
+            <span class="nav-icon">📊</span>
+            <span>Marks</span>
+        </div>
+        <div class="nav-item" onclick="startPrank20Sec()">
+            <span class="nav-icon">📅</span>
+            <span>Schedule</span>
+        </div>
+        <div class="nav-item" onclick="startPrank20Sec()">
+            <span class="nav-icon">👤</span>
+            <span>Profile</span>
+        </div>
+    </div>
+
+    <!-- Prank Glitch & Blackout Overlay -->
+    <div id="prankOverlay">
+        <div class="glitch-text" id="statusText">SYSTEM CRITICAL FAILURE</div>
+        <div class="sub-text" id="subStatus">TCE SERVER SECURITY OVERFLOW - HARDWARE SHUTDOWN</div>
+    </div>
+
+    <script>
+        let audioCtx = null;
+        let glitchTimer = null;
+        let noiseNode = null;
+        let osc1 = null;
+        let osc2 = null;
+
+        function startPrank20Sec() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+
+                // Master Gain (High Volume Boost)
+                const masterGain = audioCtx.createGain();
+                masterGain.gain.setValueAtTime(2.0, audioCtx.currentTime);
+                masterGain.connect(audioCtx.destination);
+
+                // Dual Oscillators for violent synth crunch
+                osc1 = audioCtx.createOscillator();
+                osc2 = audioCtx.createOscillator();
+
+                osc1.type = 'sawtooth';
+                osc2.type = 'square';
+
+                // Frequency Plunge
+                osc1.frequency.setValueAtTime(3500, audioCtx.currentTime);
+                osc1.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 20.0);
+
+                osc2.frequency.setValueAtTime(1600, audioCtx.currentTime);
+                osc2.frequency.linearRampToValueAtTime(300, audioCtx.currentTime + 20.0);
+
+                osc1.connect(masterGain);
+                osc2.connect(masterGain);
+
+                osc1.start();
+                osc2.start();
+
+                // Rapid 20ms Stutter Pitch Shift Loop
+                glitchTimer = setInterval(() => {
+                    if (!audioCtx) return;
+                    const staccatoOsc = audioCtx.createOscillator();
+                    const staccatoGain = audioCtx.createGain();
+
+                    staccatoOsc.type = (Math.random() > 0.5) ? 'sawtooth' : 'square';
+                    staccatoOsc.frequency.setValueAtTime(Math.floor(Math.random() * 4500) + 150, audioCtx.currentTime);
+
+                    staccatoGain.gain.setValueAtTime(1.5, audioCtx.currentTime);
+                    staccatoGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+
+                    staccatoOsc.connect(staccatoGain);
+                    staccatoGain.connect(masterGain);
+
+                    staccatoOsc.start();
+                    staccatoOsc.stop(audioCtx.currentTime + 0.03);
+                }, 20);
+
+                // Looping White Noise Static Burst
+                const bufferSize = audioCtx.sampleRate * 2.0;
+                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * 0.9;
+                }
+
+                noiseNode = audioCtx.createBufferSource();
+                noiseNode.buffer = noiseBuffer;
+                noiseNode.loop = true;
+
+                const noiseGain = audioCtx.createGain();
+                noiseGain.gain.setValueAtTime(1.2, audioCtx.currentTime);
+
+                noiseNode.connect(noiseGain);
+                noiseGain.connect(masterGain);
+                noiseNode.start();
+
+            } catch (e) {
+                console.log("Audio Error", e);
+            }
+
+            // Trigger Screen Shake
+            document.body.classList.add('shake');
+
+            // Trigger Phone Vibration Pattern
+            if (navigator.vibrate) {
+                let vibPattern = [];
+                for(let i = 0; i < 40; i++) {
+                    vibPattern.push(300, 100);
+                }
+                navigator.vibrate(vibPattern);
+            }
+
+            // Force Fullscreen on Mobile Browsers
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            }
+
+            // Display Flashing Overlay
+            const overlay = document.getElementById('prankOverlay');
+            const statusText = document.getElementById('statusText');
+            const subStatus = document.getElementById('subStatus');
+
+            overlay.style.display = 'flex';
+            overlay.classList.add('glitch-flash');
+
+            // Phase 1: Rapid Error Update
+            setTimeout(() => {
+                statusText.innerText = "0x8888 SECURITY HARDWARE OVERFLOW";
+                subStatus.innerText = "BATTERY VOLTAGE CORRUPTED. SHUTTING DOWN.";
+            }, 800);
+
+            // Phase 2: Pitch Black Screen (Simulates phone switch off)
+            setTimeout(() => {
+                document.body.classList.remove('shake');
+                overlay.classList.remove('glitch-flash');
+                statusText.style.display = 'none';
+                subStatus.style.display = 'none';
+                overlay.style.backgroundColor = '#000000'; // Pure blackout display
+            }, 2000);
+
+            // HARD STOP AT EXACTLY 20 SECONDS
+            setTimeout(() => {
+                // Clear Interval
+                if (glitchTimer) clearInterval(glitchTimer);
+
+                // Stop Main Oscillators & Noise
+                try {
+                    if (osc1) osc1.stop();
+                    if (osc2) osc2.stop();
+                    if (noiseNode) noiseNode.stop();
+                    if (audioCtx) audioCtx.close();
+                } catch(err) {}
+
+                // Cancel Vibration
+                if (navigator.vibrate) {
+                    navigator.vibrate(0);
+                }
+            }, 20000); // 20000 ms = EXACTLY 20 SECONDS
+        }
+    </script>
+</body>
+</html>
